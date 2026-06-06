@@ -1,0 +1,1352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enterprise Multi-Theme Quotation Engine v4.0</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    
+    <style>
+        /* ==================== PREMIUM UI DASHBOARD LAYOUT ==================== */
+        :root {
+            --ui-bg: #f4f6fa;
+            --ui-card: #ffffff;
+            --ui-primary: #3b82f6;
+            --ui-text: #1f2937;
+            --ui-border: #e5e7eb;
+            --ui-label: #374151;
+            --ui-input-bg: #ffffff;
+        }
+
+        /* DARK MODE VARIANTS (UPGRADE: DARK MODE) */
+        [data-theme="dark"] {
+            --ui-bg: #0f172a;
+            --ui-card: #1e293b;
+            --ui-text: #f8fafc;
+            --ui-border: #334155;
+            --ui-label: #cbd5e1;
+            --ui-input-bg: #0f172a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--ui-bg);
+            overflow: hidden;
+            color: var(--ui-text);
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .app-container {
+            display: flex;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        /* Modern Left Dashboard Panel */
+        .form-panel {
+            width: 38%;
+            background-color: var(--ui-card);
+            padding: 24px;
+            border-right: 1px solid var(--ui-border);
+            overflow-y: auto;
+            height: 100vh;
+            box-shadow: 4px 0 20px rgba(0,0,0,0.02);
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        .panel-header {
+            margin-bottom: 24px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #eff6ff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        [data-theme="dark"] .panel-header {
+            border-bottom-color: #334155;
+        }
+
+        .panel-header h2 {
+            font-size: 20px;
+            font-weight: 800;
+            color: #1e3a8a;
+            letter-spacing: -0.5px;
+        }
+        [data-theme="dark"] .panel-header h2 {
+            color: #38bdf8;
+        }
+
+        .panel-header p {
+            font-size: 12px;
+            color: #6b7280;
+            margin-top: 4px;
+        }
+
+        /* Dark Mode Toggle Switch Button */
+        .theme-toggle-btn {
+            background: var(--ui-bg);
+            border: 1px solid var(--ui-border);
+            color: var(--ui-text);
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+
+        /* UI Cards / Sections */
+        .ui-card {
+            background: var(--ui-card);
+            border: 1px solid var(--ui-border);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        .ui-card-title {
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--ui-label);
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .theme-highlight-box {
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+            border: 1px solid #bfdbfe;
+        }
+        [data-theme="dark"] .theme-highlight-box {
+            background: linear-gradient(135deg, #1e3a8a 0%, #1e293b 100%);
+            border-color: #3b82f6;
+        }
+
+        .catalog-highlight-box {
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            border: 1px solid #bbf7d0;
+        }
+        [data-theme="dark"] .catalog-highlight-box {
+            background: linear-gradient(135deg, #064e3b 0%, #1e293b 100%);
+            border-color: #10b981;
+        }
+
+        .backup-highlight-box {
+            background: linear-gradient(135deg, #fef3c7 0%, #fffbeb 100%);
+            border: 1px solid #fde68a;
+        }
+        [data-theme="dark"] .backup-highlight-box {
+            background: linear-gradient(135deg, #78350f 0%, #1e293b 100%);
+            border-color: #f59e0b;
+        }
+
+        details {
+            border: 1px solid var(--ui-border);
+            border-radius: 8px;
+            margin-bottom: 12px;
+            background: var(--ui-bg);
+            overflow: hidden;
+        }
+
+        summary {
+            padding: 12px 16px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            background: var(--ui-card);
+            user-select: none;
+            transition: background 0.2s;
+        }
+        summary:hover { background: var(--ui-bg); }
+
+        .details-content {
+            padding: 16px;
+            border-top: 1px solid var(--ui-border);
+            background: var(--ui-card);
+        }
+
+        /* Modern Form Inputs */
+        .form-group {
+            margin-bottom: 14px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 11px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: var(--ui-label);
+        }
+
+        .form-panel input, .form-panel select, .form-panel textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--ui-border);
+            border-radius: 8px;
+            font-size: 13px;
+            background: var(--ui-input-bg);
+            color: var(--ui-text);
+            transition: all 0.2s;
+        }
+
+        .form-panel input:focus, .form-panel select:focus, .form-panel textarea:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .form-row {
+            display: flex;
+            gap: 12px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        /* Dynamic Item Form Rows */
+        .item-row-form {
+            background: var(--ui-bg);
+            padding: 14px;
+            border: 1px solid var(--ui-border);
+            border-radius: 10px;
+            margin-bottom: 12px;
+            position: relative;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.01);
+        }
+
+        /* UI Interactive Buttons */
+        .btn-primary-ui { background: #2563eb; color: white; border: none; width: 100%; padding: 10px; cursor: pointer; font-weight: 600; border-radius: 8px; transition: background 0.2s; font-size: 13px; }
+        .btn-primary-ui:hover { background: #1d4ed8; }
+        .btn-secondary-ui { background: #16a34a; color: white; border: none; width: 100%; padding: 10px; cursor: pointer; font-weight: 600; border-radius: 8px; transition: background 0.2s; font-size: 13px; }
+        .btn-secondary-ui:hover { background: #15803d; }
+        .btn-neutral-ui { background: #4b5563; color: white; border: none; width: 100%; padding: 8px; font-size: 12px; cursor: pointer; font-weight: 600; border-radius: 6px; margin-top: 4px; }
+        
+        .btn-add-row { background-color: #0284c7; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; width: 100%; font-weight: 700; font-size: 13px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .btn-add-row:hover { background-color: #0369a1; }
+        
+        .btn-delete-row { background-color: #ef4444; color: white; border: none; padding: 4px 10px; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: 600; position: absolute; right: 12px; top: 12px; z-index: 10; }
+        .btn-delete-row:hover { background-color: #dc2626; }
+        
+        .btn-action-download { background: linear-gradient(135deg, #16a34a 0%, #15803d 100%); color: white; border: none; padding: 14px; border-radius: 10px; cursor: pointer; width: 100%; font-size: 16px; font-weight: 700; margin-top: 20px; box-shadow: 0 4px 12px rgba(22, 163, 74, 0.2); }
+        .btn-action-print { background: #3b82f6; color: white; border: none; padding: 12px; border-radius: 10px; cursor: pointer; width: 100%; font-size: 14px; font-weight: 600; margin-top: 10px; }
+
+        /* Canvas Drawing Pad Components */
+        .signature-pad-wrapper {
+            background: var(--ui-card);
+            border: 1px dashed #9ca3af;
+            border-radius: 8px;
+            padding: 8px;
+            margin-top: 5px;
+        }
+        .signature-canvas {
+            background: #fafafa;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            cursor: crosshair;
+            width: 100%;
+            height: 110px;
+            display: block;
+        }
+
+        /* Search Dropdown Styling Asset */
+        .search-results-box {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: var(--ui-card);
+            border: 1px solid var(--ui-border);
+            border-radius: 8px;
+            max-height: 180px;
+            overflow-y: auto;
+            z-index: 999;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+            display: none;
+        }
+        .search-item-option {
+            padding: 8px 12px;
+            font-size: 12px;
+            cursor: pointer;
+            border-bottom: 1px solid var(--ui-border);
+            color: var(--ui-text);
+        }
+        .search-item-option:hover {
+            background-color: #eff6ff;
+            color: #1e40af;
+        }
+
+        /* ==================== RIGHT PANEL: LIVE PREVIEW CANVAS ==================== */
+        .preview-panel {
+            width: 62%;
+            padding: 40px;
+            display: flex;
+            justify-content: center;
+            overflow-y: auto;
+            height: 100vh;
+            background-color: #e5e7eb;
+        }
+
+        /* Base A4 Blueprint Document Sheet */
+        .quotation-box {
+            width: 100%;
+            max-width: 800px;
+            background: white;
+            padding: 45px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            position: relative;
+            min-height: 1050px;
+            display: flex;
+            flex-direction: column;
+            box-sizing: border-box;
+            color: #111827 !important; /* Document must stay readable light for printing */
+        }
+
+        /* BACKGROUND WATERMARK CORE STYLING (UPGRADE: WATERMARK) */
+        .quotation-watermark {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg);
+            font-size: 70px;
+            font-weight: 900;
+            color: rgba(0, 0, 0, 0.04);
+            text-transform: uppercase;
+            letter-spacing: 10px;
+            pointer-events: none;
+            user-select: none;
+            width: 120%;
+            text-align: center;
+            z-index: 0;
+            white-space: nowrap;
+        }
+
+        /* Reusable Document Core Assets */
+        .preview-logo { max-height: 70px; max-width: 180px; display: block; object-fit: contain; position: relative; z-index: 2; }
+        .preview-stamp { max-height: 85px; max-width: 85px; transform: rotate(-8deg); }
+        .preview-sign { max-height: 55px; max-width: 160px; display: block; object-fit: contain; }
+        
+        .items-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-bottom: 25px; margin-top: 15px; position: relative; z-index: 2;}
+        .items-table th, .items-table td { padding: 10px 10px; border: 1px solid #e5e7eb; text-align: left; }
+        .calc-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+        .calc-table td { padding: 8px; border: 1px solid #e5e7eb; }
+
+        /* ==================== THEME ENGINE ARCHITECTURE ==================== */
+
+        /* 1. LAYOUT CORPORATE BLUE (Classic Linear) */
+        .layout-corporate { --primary: #0f172a; --brand: #1e40af; }
+        .layout-corporate .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid var(--brand); padding-bottom: 16px; margin-bottom: 20px;}
+        .layout-corporate .main-logo { font-size: 28px; font-weight: 800; color: var(--brand); text-transform: uppercase; }
+        .layout-corporate .subtitle { font-size: 9px; letter-spacing: 2px; color: #475569; font-weight: 700; margin-top: 2px;}
+        .layout-corporate .company-contact { text-align: right; font-size: 11px; line-height: 1.5; color: #334155; }
+        .layout-corporate .quotation-meta { display: flex; justify-content: space-between; margin-bottom: 25px; }
+        .layout-corporate .quote-details { text-align: right; }
+        .layout-corporate .quote-details h1 { color: var(--brand); font-size: 28px; font-weight: 900; letter-spacing: 1px; }
+        .layout-corporate .items-table th { background-color: var(--brand); color: white; font-weight: 600; border: 1px solid var(--brand); }
+        .layout-corporate .grand-total-row { background-color: var(--brand); color: white; font-weight: bold; }
+        .layout-corporate .bottom-ribbon { background-color: var(--brand); color: white; padding: 12px; display: flex; justify-content: space-between; font-size: 10px; margin-top: auto; margin-left: -45px; margin-right: -45px; margin-bottom: -45px;}
+
+        /* 2. LAYOUT EXECUTIVE SPLIT (Asymmetrical Block) */
+        .layout-split { --brand: #0d9488; }
+        .layout-split .header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px dashed var(--brand); padding-bottom: 20px; margin-bottom: 25px; }
+        .layout-split .main-logo { font-size: 26px; font-weight: 800; color: #111827; }
+        .layout-split .subtitle { font-size: 10px; color: var(--brand); font-weight: 600; text-transform: uppercase; margin-top: 4px; }
+        .layout-split .company-contact { text-align: right; font-size: 11px; color: #4b5563; background: #f8fafc; padding: 12px; border-left: 4px solid var(--brand); border-radius: 0 8px 8px 0; }
+        .layout-split .quotation-meta { display: flex; flex-direction: row-reverse; justify-content: space-between; margin-bottom: 30px; background: #f8fafc; padding: 16px; border-radius: 8px; }
+        .layout-split .quote-details { text-align: left; }
+        .layout-split .quote-details h1 { color: var(--brand); font-size: 24px; font-weight: 800; border-bottom: 2px solid var(--brand); display: inline-block; padding-bottom: 4px; }
+        .layout-split .to-party { text-align: right; }
+        .layout-split .items-table th { background-color: #f1f5f9; color: #0f172a; font-weight: 700; border: 1px solid #cbd5e1; }
+        .layout-split .grand-total-row { background-color: var(--brand); color: white; }
+        .layout-split .bottom-ribbon { background-color: #111827; color: white; padding: 12px; text-align: center; font-size: 10px; margin-top: auto; margin-left: -45px; margin-right: -45px; margin-bottom: -45px; }
+
+        /* 3. LAYOUT MINIMAL CENTER (Centered Branding Architecture) */
+        .layout-modern { --brand: #4f46e5; }
+        .layout-modern .header { display: block; text-align: center; margin-bottom: 30px; border-bottom: 1px solid #e2e8f0; padding-bottom: 20px; }
+        .layout-modern .logo-area { display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .layout-modern .preview-logo { margin: 0 auto 10px auto; }
+        .layout-modern .main-logo { font-size: 30px; font-weight: 900; color: var(--brand); text-transform: uppercase; }
+        .layout-modern .subtitle { font-size: 11px; color: #64748b; margin-top: 4px; }
+        .layout-modern .company-contact { text-align: center; margin-top: 12px; font-size: 11px; color: #475569; display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; }
+        .layout-modern .quotation-meta { display: block; text-align: center; margin-bottom: 25px; }
+        .layout-modern .quote-details { text-align: center; margin-bottom: 20px; }
+        .layout-modern .quote-details h1 { font-size: 32px; font-weight: 900; letter-spacing: 3px; color: #1e293b; }
+        .layout-modern .to-party { text-align: left; background: #f5f3ff; padding: 16px; border-radius: 8px; width: 100%; border: 1px solid #ddd6fe; }
+        .layout-modern .items-table { border: none; }
+        .layout-modern .items-table th { background-color: var(--brand); color: white; border: none; }
+        .layout-modern .items-table td { border-left: none; border-right: none; }
+        .layout-modern .grand-total-row { background-color: var(--brand); color: white; }
+        .layout-modern .bottom-ribbon { background: none; color: #64748b; border-top: 1px solid #e2e8f0; padding: 15px 0; text-align: center; font-size: 10px; margin-top: auto; margin-left: 0; margin-right: 0; margin-bottom: -20px; }
+
+        /* 4. LAYOUT TECH CLEAN (Minimal Slate Edge) */
+        .layout-tech { --brand: #0284c7; }
+        .layout-tech .header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 30px; background: #0f172a; color: white; padding: 24px; margin-left: -45px; margin-right: -45px; margin-top: -45px;}
+        .layout-tech .main-logo { font-size: 26px; font-weight: 800; color: #fff; }
+        .layout-tech .subtitle { font-size: 10px; color: #94a3b8; }
+        .layout-tech .company-contact { text-align: right; font-size: 11px; color: #cbd5e1; }
+        .layout-tech .quotation-meta { display: flex; justify-content: space-between; margin-bottom: 25px; border-left: 4px solid var(--brand); padding-left: 14px; }
+        .layout-tech .quote-details h1 { color: #0f172a; font-size: 26px; font-weight: 800; }
+        .layout-tech .items-table th { background-color: #0f172a; color: white; border: 1px solid #0f172a; }
+        .layout-tech .grand-total-row { background-color: var(--brand); color: white; }
+        .layout-tech .bottom-ribbon { background-color: #0f172a; color: white; padding: 12px; text-align: center; font-size: 10px; margin-top: auto; margin-left: -45px; margin-right: -45px; margin-bottom: -45px; }
+
+        /* 5. LAYOUT ELEGANT LUXURY (Warm Gold Premium) */
+        .layout-luxury { --brand: #854d0e; }
+        .layout-luxury .header { display: flex; flex-direction: column; align-items: center; text-align: center; border-bottom: 1px solid #e6c280; padding-bottom: 20px; margin-bottom: 25px; }
+        .layout-luxury .main-logo { font-size: 32px; font-family: 'Georgia', serif; font-weight: 400; color: var(--brand); letter-spacing: 1px; }
+        .layout-luxury .subtitle { font-size: 10px; color: #b45309; letter-spacing: 3px; text-transform: uppercase; margin-top: 6px; }
+        .layout-luxury .company-contact { text-align: center; font-size: 11px; color: #57534e; margin-top: 10px; line-height: 1.6; }
+        .layout-luxury .quotation-meta { display: flex; justify-content: space-between; margin-bottom: 25px; font-size: 12px; }
+        .layout-luxury .quote-details h1 { font-family: 'Georgia', serif; color: var(--brand); font-size: 28px; font-weight: 400; letter-spacing: 2px; }
+        .layout-luxury .items-table th { background-color: #fef08a; color: #854d0e; border: 1px solid #eab308; font-weight: 700; }
+        .layout-luxury .grand-total-row { background-color: #854d0e; color: white; }
+        .layout-luxury .bottom-ribbon { background-color: #451a03; color: #fef08a; padding: 12px; text-align: center; font-size: 10px; margin-top: auto; margin-left: -45px; margin-right: -45px; margin-bottom: -45px; }
+
+        /* 6. LAYOUT SLATE PROFESSIONAL */
+        .layout-slate { --brand: #475569; }
+        .layout-slate .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 4px solid var(--brand); padding-bottom: 12px; margin-bottom: 20px;}
+        .layout-slate .main-logo { font-size: 26px; font-weight: 700; color: var(--brand); }
+        .layout-slate .company-contact { font-size: 11px; color: #334155; }
+        .layout-slate .quote-details h1 { color: var(--brand); font-size: 26px; font-weight: 800; }
+        .layout-slate .items-table th { background-color: var(--brand); color: white; }
+        .layout-slate .grand-total-row { background-color: #1e293b; color: white; }
+        .layout-slate .bottom-ribbon { background-color: var(--brand); color: white; padding: 10px; font-size: 10px; margin-top: auto; margin-left: -45px; margin-right: -45px; margin-bottom: -45px; }
+
+        /* 7. LAYOUT EMERALD GREEN */
+        .layout-emerald { --brand: #047857; }
+        .layout-emerald .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--brand); padding-bottom: 15px; }
+        .layout-emerald .main-logo { font-size: 28px; font-weight: 800; color: var(--brand); }
+        .layout-emerald .quote-details h1 { color: var(--brand); font-size: 26px; font-weight: 800; }
+        .layout-emerald .items-table th { background-color: var(--brand); color: white; border: 1px solid var(--brand); }
+        .layout-emerald .grand-total-row { background-color: var(--brand); color: white; }
+        .layout-emerald .bottom-ribbon { background-color: #064e3b; color: white; padding: 10px; margin-top: auto; margin-left: -45px; margin-right: -45px; margin-bottom: -45px; }
+
+        /* 8. LAYOUT ROYAL NAVY */
+        .layout-navy { --brand: #1e3a8a; }
+        .layout-navy .header { display: flex; justify-content: space-between; align-items: center; background: #1e3a8a; color: white; padding: 20px; margin-left: -45px; margin-right: -45px; margin-top: -45px; margin-bottom: 25px; }
+        .layout-navy .main-logo { font-size: 26px; font-weight: 800; color: #fff; }
+        .layout-navy .quote-details h1 { color: var(--brand); font-size: 26px; font-weight: 800; }
+        .layout-navy .items-table th { background-color: #1d4ed8; color: white; }
+        .layout-navy .grand-total-row { background-color: var(--brand); color: white; }
+        .layout-navy .bottom-ribbon { background-color: #172554; color: white; padding: 12px; margin-top: auto; margin-left: -45px; margin-right: -45px; margin-bottom: -45px; }
+
+        /* 9. LAYOUT CHARCOAL STARK */
+        .layout-charcoal { --brand: #262626; }
+        .layout-charcoal .header { display: flex; justify-content: space-between; border-bottom: 1px solid #ccc; padding-bottom: 15px; margin-bottom: 20px; }
+        .layout-charcoal .main-logo { font-size: 26px; font-weight: 900; color: #000; }
+        .layout-charcoal .quote-details h1 { color: #000; font-size: 26px; font-weight: 900; border-bottom: 4px solid #000; padding-bottom: 2px; }
+        .layout-charcoal .items-table th { background-color: #262626; color: white; border: 1px solid #262626; }
+        .layout-charcoal .grand-total-row { background-color: #000; color: white; }
+        .layout-charcoal .bottom-ribbon { background-color: #171717; color: white; padding: 12px; margin-top: auto; margin-left: -45px; margin-right: -45px; margin-bottom: -45px; text-align: center;}
+
+        /* 10. LAYOUT CRIMSON BOLD */
+        .layout-crimson { --brand: #b91c1c; }
+        .layout-crimson .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid var(--brand); padding-bottom: 15px; }
+        .layout-crimson .main-logo { font-size: 28px; font-weight: 800; color: var(--brand); }
+        .layout-crimson .quote-details h1 { color: var(--brand); font-size: 26px; font-weight: 800; }
+        .layout-crimson .items-table th { background-color: var(--brand); color: white; }
+        .layout-crimson .grand-total-row { background-color: var(--brand); color: white; }
+        .layout-crimson .bottom-ribbon { background-color: #7f1d1d; color: white; padding: 10px; margin-top: auto; margin-left: -45px; margin-right: -45px; margin-bottom: -45px; }
+
+        /* 11. LAYOUT AMBER WARM */
+        .layout-amber { --brand: #d97706; }
+        .layout-amber .header { display: flex; justify-content: space-between; border-bottom: 2px solid var(--brand); padding-bottom: 15px; }
+        .layout-amber .main-logo { font-size: 26px; font-weight: 800; color: var(--brand); }
+        .layout-amber .quote-details h1 { color: var(--brand); font-size: 26px; font-weight: 800; }
+        .layout-amber .items-table th { background-color: #fef3c7; color: #92400e; border: 1px solid #f59e0b; font-weight: bold; }
+        .layout-amber .grand-total-row { background-color: var(--brand); color: white; }
+        .layout-amber .bottom-ribbon { background-color: #78350f; color: white; padding: 10px; margin-top: auto; margin-left: -45px; margin-right: -45px; margin-bottom: -45px; }
+
+        /* 12. LAYOUT CORAL INDIGO */
+        .layout-coral { --brand: #4338ca; }
+        .layout-coral .header { display: flex; justify-content: space-between; background: linear-gradient(to right, #4338ca, #ea580c); color: white; padding: 25px; margin-left: -45px; margin-right: -45px; margin-top: -45px; margin-bottom: 25px; }
+        .layout-coral .main-logo { font-size: 26px; font-weight: 800; color: white; }
+        .layout-coral .quote-details h1 { color: #4338ca; font-size: 26px; font-weight: 800; }
+        .layout-coral .items-table th { background-color: #4338ca; color: white; }
+        .layout-coral .grand-total-row { background-color: #ea580c; color: white; }
+        .layout-coral .bottom-ribbon { background: linear-gradient(to right, #4338ca, #ea580c); color: white; padding: 12px; margin-top: auto; margin-left: -45px; margin-right: -45px; margin-bottom: -45px; }
+
+        /* Global Layout Adjustments */
+        .subject-view { font-size: 13px; border-bottom: 1px solid #e5e7eb; padding-bottom: 8px; margin-bottom: 15px; position: relative; z-index: 2; }
+
+        /* ==================== CRITICAL UPGRADE: MULTI-PAGE PAGE-BREAK CODES ==================== */
+        .items-table tr {
+            page-break-inside: avoid !important;
+        }
+        .summary-section, .footer-terms, header, .quotation-meta {
+            page-break-inside: avoid !important;
+        }
+        /* ==================== MOBILE RESPONSIVE ==================== */
+@media (max-width: 768px) {
+    body {
+        overflow: auto;
+    }
+
+    .app-container {
+        flex-direction: column;
+        height: auto;
+        width: 100%;
+    }
+
+    .form-panel {
+        width: 100%;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid var(--ui-border);
+        padding: 16px;
+    }
+
+    .preview-panel {
+        width: 100%;
+        height: auto;
+        padding: 16px;
+        overflow-x: auto;
+    }
+
+    .quotation-box {
+        padding: 20px;
+        min-width: 600px;
+    }
+
+    .panel-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .form-row {
+        flex-direction: column;
+        gap: 0;
+    }
+
+    .item-row-form {
+        padding: 12px;
+    }
+
+    .ui-card {
+        padding: 12px;
+    }
+
+    details summary {
+        font-size: 12px;
+    }
+
+    .btn-action-download,
+    .btn-action-print {
+        font-size: 14px;
+        padding: 12px;
+    }
+
+    /* Quotation preview scroll hint */
+    .preview-panel::before {
+        content: "← Scroll to see full quotation →";
+        display: block;
+        text-align: center;
+        font-size: 11px;
+        color: #94a3b8;
+        margin-bottom: 10px;
+        font-style: italic;
+    }
+}
+
+@media (max-width: 480px) {
+    .panel-header h2 {
+        font-size: 16px;
+    }
+
+    .theme-toggle-btn {
+        font-size: 12px;
+        padding: 6px 10px;
+    }
+
+    .quotation-box {
+        padding: 15px;
+        min-width: 550px;
+    }
+
+    .layout-corporate .header,
+    .layout-split .header,
+    .layout-tech .header,
+    .layout-navy .header {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .layout-corporate .company-contact,
+    .layout-split .company-contact {
+        text-align: left;
+    }
+}
+        /* PRINT OVERRIDES SCREEN */
+        @media print {
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        color-adjust: exact !important;
+    }
+    @page {
+        margin: 0.4in;
+        size: A4 portrait;
+    }
+    .no-print { display: none !important; }
+    body { background: white; overflow: visible; }
+    .app-container { display: block; height: auto; width: auto; }
+    .preview-panel { width: 100%; padding: 0; overflow: visible; height: auto; background: white;}
+    .quotation-box { box-shadow: none; padding: 45px; width: 100%; min-height: auto; position: relative; }
+    .quotation-watermark { color: rgba(0, 0, 0, 0.03) !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <div class="form-panel no-print" id="dashboard-panel">
+            <div class="panel-header">
+                <div>
+                    <h2>Quotation Console</h2>
+                    <p>Enterprise SaaS Generation Tool & Storage</p>
+                </div>
+                <button type="button" class="theme-toggle-btn" id="btn-toggle-dark-mode">
+                    <span id="theme-icon">🌙</span> Dark Mode
+                </button>
+            </div>
+            
+            <div class="ui-card backup-highlight-box">
+                <div class="ui-card-title">💾 Central Database Backup Engine</div>
+                <div style="display: flex; gap: 8px;">
+                    <button type="button" class="btn-primary-ui" id="btn-export-db" style="background:#d97706;">📤 Export Full Backup (.json)</button>
+                    <button type="button" class="btn-secondary-ui" id="btn-trigger-import" style="background:#059669;">📥 Import Database File</button>
+                </div>
+                <input type="file" id="input-import-db" accept=".json" style="display: none;">
+            </div>
+
+            <div class="ui-card theme-highlight-box">
+                <div class="ui-card-title">📐 Architecture Layout & Watermark</div>
+                <div class="form-group">
+                    <label>Layout Theme Template</label>
+                    <select id="input-theme" style="font-weight: 600; border-color: #3b82f6;">
+                        <option value="layout-corporate">Theme 1: Corporate Top-Header (Classic Blue)</option>
+                        <option value="layout-split">Theme 2: Executive Split (Left/Right Shifted)</option>
+                        <option value="layout-modern">Theme 3: Modern Center-Aligned Format</option>
+                        <option value="layout-tech">Theme 4: Tech Clean (Slate Contrast Top)</option>
+                        <option value="layout-luxury">Theme 5: Elegant Luxury (Serif Gold Accent)</option>
+                        <option value="layout-slate">Theme 6: Slate Professional (Steel Structural)</option>
+                        <option value="layout-emerald">Theme 7: Emerald Business (Corporate Green)</option>
+                        <option value="layout-navy">Theme 8: Royal Navy Premium</option>
+                        <option value="layout-charcoal">Theme 9: Charcoal Stark (High Contrast)</option>
+                        <option value="layout-crimson">Theme 10: Crimson Bold (Impact Modern)</option>
+                        <option value="layout-amber">Theme 11: Amber Warm (Earth Tone Style)</option>
+                        <option value="layout-coral">Theme 12: Coral Indigo Gradient Blast</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label style="color:#d97706; font-weight:700;">🎨 Dynamic Background Watermark Text</label>
+                    <input type="text" id="input-watermark" value="SALMAN TRADERS" placeholder="e.g. CONFIDENTIAL, QUOTATION or Blank">
+                </div>
+            </div>
+            
+            <details open>
+                <summary>🏢 Your Firm Profile & Branding</summary>
+                <div class="details-content">
+                    <div class="form-group">
+                        <label>Your Company Name</label>
+                        <input type="text" id="input-my-company" value="M/s Salman Traders">
+                    </div>
+                    <div class="form-group">
+                        <label>Tagline / Business Line</label>
+                        <input type="text" id="input-my-tagline" value="IMPORTS - EXPORTS - GENERAL ORDER SUPPLIES">
+                    </div>
+                    <div class="form-group">
+                        <label>Company Logo Image</label>
+                        <input type="file" id="input-my-logo" accept="image/*">
+                    </div>
+                    <div class="form-group">
+                    <label>Quotation Number Prefix</label>
+                    <input type="text" id="input-quote-prefix" placeholder="e.g. ST/QTN or ABC/Q" value="">
+                    </div>
+                    <div class="form-group">
+                        <label>Registered Office Address</label>
+                        <textarea id="input-my-address" rows="2">Shop # 12, Main Market, Karachi, Pakistan.</textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group"><label>Mobile</label><input type="text" id="input-my-phone" value="+92 300 1234567"></div>
+                        <div class="form-group"><label>Email Address</label><input type="email" id="input-my-email" value="info@salmantraders.com"></div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group"><label>NTN Number</label><input type="text" id="input-my-ntn" value="1234567-8"></div>
+                        <div class="form-group"><label>STRN Number</label><input type="text" id="input-my-strn" value="1234567890123"></div>
+                    </div>
+                    <div class="form-group">
+                        <label>Warehouse / Dispatch Address</label>
+                        <input type="text" id="input-my-footer-addr" value="Plot # 45, Korangi Industrial Area, Karachi.">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label style="color: #2563eb; font-weight: 700;">✍️ Live Digital Touch Signature Draw-Pad</label>
+                        <div class="signature-pad-wrapper">
+                            <canvas id="signature-pad" class="signature-canvas"></canvas>
+                            <div style="display:flex; justify-content:space-between; margin-top:6px;">
+                                <button type="button" id="btn-clear-pad" style="background:#e5e7eb; color:#374151; border:none; padding:4px 10px; border-radius:4px; font-size:11px; cursor:pointer; font-weight:600;">Clear Pad</button>
+                                <button type="button" id="btn-lock-pad" style="background:#2563eb; color:white; border:none; padding:4px 10px; border-radius:4px; font-size:11px; cursor:pointer; font-weight:600;">Apply Drawing Sign</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row" style="margin-top:10px;">
+                        <div class="form-group"><label>Alternative upload Sign File</label><input type="file" id="input-my-sign" accept="image/*"></div>
+                        <div class="form-group"><label>Stamp Image File</label><input type="file" id="input-my-stamp" accept="image/*"></div>
+                    </div>
+                    <button type="button" class="btn-primary-ui" id="btn-save-profile">💾 Save System Profile Setup</button>
+                </div>
+            </details>
+
+            <details>
+                <summary>📦 Item Catalog & Inventory Preset Manager</summary>
+                <div class="details-content catalog-highlight-box" style="border-radius: 8px;">
+                    <div class="form-group"><label>Item Description / Title</label><input type="text" id="cat-desc" placeholder="e.g. Deformed Steel Bar"></div>
+                    <div class="form-group"><label>Product Specifications / Size</label><input type="text" id="cat-spec" placeholder="e.g. Grade 60, 12mm Dia"></div>
+                    <div class="form-row">
+                        <div class="form-group"><label>Unit (e.g. Ton, Bag)</label><input type="text" id="cat-unit" placeholder="Ton"></div>
+                        <div class="form-group"><label>Standard Unit Price</label><input type="number" id="cat-price" placeholder="0.00"></div>
+                    </div>
+                    <button type="button" class="btn-secondary-ui" id="btn-add-to-catalog">➕ Save Product to Database Catalog</button>
+                </div>
+            </details>
+
+            <div class="ui-card">
+                <div class="ui-card-title">🌐 Worldwide Currency & Meta Setup</div>
+                <div class="form-group">
+                    <label>Select Invoice Currency</label>
+                    <select id="input-currency">
+                        <option value="PKR">PKR - Pakistan (Rs.)</option>
+                        <option value="USD">USD - United States ($)</option>
+                        <option value="EUR">EUR - Eurozone (€)</option>
+                        <option value="AED">AED - United Arab Emirates (د.إ)</option>
+                        <option value="SAR">SAR - Saudi Arabia (ر.س)</option>
+                        <option value="GBP">GBP - United Kingdom (£)</option>
+                        <option value="CAD">CAD - Canada ($)</option>
+                        <option value="AUD">AUD - Australia ($)</option>
+                        <option value="INR">INR - India (₹)</option>
+                        <option value="OMR">OMR - Oman (ر.ع.)</option>
+                        <option value="QAR">QAR - Qatar (ر.ق)</option>
+                        <option value="CNY">CNY - China (¥)</option>
+                    </select>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label>Quotation Number</label><input type="text" id="input-quote-no" value="ST/QTN/2026/051"></div>
+                    <div class="form-group"><label>Issue Date</label><input type="date" id="input-date"></div>
+                </div>
+                <div class="form-group"><label>Subject Heading</label><input type="text" id="input-subject" value="Quotation for Supply of Premium Structural Construction Materials"></div>
+            </div>
+
+            <div class="ui-card">
+                <div class="ui-card-title">👤 Client/Customer Management</div>
+                <div class="form-group" style="background: #f9fafb; padding: 10px; border-radius: 6px; border: 1px solid #e5e7eb; display:block;">
+                    <label style="color: #2563eb;">⚡ Memory Link: Quick Load Client</label>
+                    <select id="select-saved-client">
+                        <option value="">-- Manual Entry / Memory Database Select --</option>
+                    </select>
+                </div>
+                <div class="form-group"><label>Customer Company Name</label><input type="text" id="input-client-name" value="M/s ABC Construction (Pvt.) Ltd."></div>
+                <div class="form-group"><label>Billing / Delivery Address</label><textarea id="input-client-address" rows="2">Suite # 501, 5th Floor, Business Center, Karachi, Pakistan.</textarea></div>
+                <button type="button" class="btn-neutral-ui" id="btn-save-current-client">💾 Save Client to Database</button>
+            </div>
+
+            <div class="ui-card">
+                <div class="ui-card-title">📝 Product Item List Rows</div>
+                <div id="form-items-container"></div>
+                <button type="button" class="btn-add-row" id="btn-add-item">+ Add New Item Row</button>
+            </div>
+
+            <div class="ui-card">
+                <div class="ui-card-title">📊 Tax Configuration & Terms</div>
+                <div class="form-row">
+                    <div class="form-group"><label>Tax Field Label</label><input type="text" id="input-tax-name" value="Sales Tax"></div>
+                    <div class="form-group"><label>Tax Rate Percentage (%)</label><input type="number" id="input-tax-percent" value="18" min="0"></div>
+                </div>
+                <div class="form-group">
+                    <label>Terms & Conditions (One per row/line)</label>
+                    <textarea id="input-terms" rows="3">Prices are inclusive of all applicable regulatory government taxes.
+Delivery Window: Within 7-10 working business days post advance confirmation.
+Payment Structural Terms: 50% advance allocation, balance 50% clear before dispatch.</textarea>
+                </div>
+            </div>
+
+            <button type="button" class="btn-action-download" id="btn-download-pdf">📥 Direct Download Premium PDF</button>
+            <button type="button" class="btn-action-print" onclick="window.print()">🖨️ Launch Print System Engine</button>
+        </div>
+
+        <div class="preview-panel">
+            <div class="quotation-box layout-corporate" id="quotation-print-area">
+                
+                <div class="quotation-watermark" id="view-watermark">SALMAN TRADERS</div>
+
+                <header class="header">
+                    <div class="logo-area">
+                        <div id="view-logo-container"></div>
+                        <div class="main-logo" id="view-my-company">---</div>
+                        <p class="subtitle" id="view-my-tagline">---</p>
+                    </div>
+                    <div class="company-contact">
+                        <p><strong>Office:</strong> <span id="view-my-address">---</span></p>
+                        <p><strong>Contact:</strong> <span id="view-my-phone">---</span> | <strong>Email:</strong> <span id="view-my-email">---</span></p>
+                        <p><strong>NTN:</strong> <span id="view-my-ntn">---</span> | <strong>STRN:</strong> <span id="view-my-strn">---</span></p>
+                    </div>
+                </header>
+
+                <hr class="top-bar">
+
+                <div class="quotation-meta">
+                    <div class="to-party">
+                        <strong style="text-transform: uppercase; font-size: 11px; color:#6b7280;">Prepared For:</strong><br>
+                        <strong id="view-client-name" style="font-size:15px; color:#111827;">---</strong><br>
+                        <span id="view-client-address" style="color:#4b5563; line-height:1.4;">---</span>
+                    </div>
+                    <div class="quote-details">
+                        <h1>QUOTATION</h1>
+                        <p><strong>Quotation Ref No:</strong> <span id="view-quote-no">---</span></p>
+                        <p><strong>Date of Issue:</strong> <span id="view-date">---</span></p>
+                    </div>
+                </div>
+
+                <div class="subject-view"><strong>Subject:</strong> <span id="view-subject">---</span></div>
+
+                <table class="items-table">
+                    <thead>
+                        <tr>
+                            <th width="7%" style="text-align: center;">Sr.</th>
+                            <th width="33%">Item Description</th>
+                            <th width="22%">Specifications / Size</th>
+                            <th width="10%" style="text-align: center;">Unit</th>
+                            <th width="8%" style="text-align: center;">Qty</th>
+                            <th width="10%" style="text-align: right;">Rate (<span class="curr-sym">PKR</span>)</th>
+                            <th width="10%" style="text-align: right;">Total (<span class="curr-sym">PKR</span>)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="view-table-body"></tbody>
+                </table>
+
+                <div class="summary-section">
+                    <div style="display: flex; justify-content: space-between; margin-top: auto; padding-top: 15px;">
+                        <div class="amount-words" style="width: 53%; font-size: 11px; color: #475569; line-height: 1.5;">
+                            <strong>Amount in Words:</strong><br>
+                            <span id="view-amount-words" style="font-style: italic; font-weight: 600;">Zero Only.</span>
+                        </div>
+                        <div class="calculations" style="width: 42%;">
+                            <table class="calc-table">
+                                <tr><td style="color:#4b5563;">Sub Total Amount</td><td id="view-sub-total" style="text-align: right; font-weight: 600;">0.00</td></tr>
+                                <tr><td style="color:#4b5563;"><span id="view-tax-label">Tax</span> (<span id="view-tax-rate">0</span>%)</td><td id="view-tax-amount" style="text-align: right; font-weight: 600;">0.00</td></tr>
+                                <tr class="grand-total-row"><td>Grand Total (<span class="curr-sym">PKR</span>)</td><td id="view-grand-total" style="text-align: right; font-size: 13px;">0.00</td></tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="footer-terms" style="display: flex; justify-content: space-between; font-size: 11px; margin-top: 25px; margin-bottom: 25px;">
+                    <div class="terms" style="width: 52%; color:#374151;">
+                        <h3 style="font-size: 12px; margin-bottom: 6px; color:#111827; font-weight:700;">Terms & Conditions:</h3>
+                        <ol id="view-terms-list" style="padding-left:15px; line-height:1.6;"></ol>
+                    </div>
+                    
+                    <div class="signature-container" style="width: 42%; position: relative; display: flex; flex-direction: column; justify-content: flex-end; align-items: flex-end; text-align: right;">
+                        <div class="stamp-overlay-box" style="position: absolute; right: 45px; bottom: 15px; z-index: 1; opacity: 0.8;"><div id="view-stamp-container"></div></div>
+                        <div class="signature-line-box" style="position: relative; z-index: 2; width: 100%; max-width: 200px;">
+                            <div id="view-sign-container"></div>
+                            <hr style="border: none; height: 1px; background-color: #111827; margin-bottom: 6px;">
+                            <p style="color:#6b7280; font-size: 10px;">Authorized Signatory</p>
+                            <strong id="view-sign-company-name" style="font-size:11px; color:#111827;">---</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <footer class="bottom-ribbon">
+                    <div><strong>Operational Warehouse Facility / Logistics:</strong> <span id="view-my-footer-addr">---</span></div>
+                </footer>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Memory Data Stores initialization
+            let items = [{ desc: "Ordinary Portland Cement", spec: "Bestway (50 kg Bag)", unit: "Bag", qty: 250, price: 1250 }];
+            
+            let clientDatabase = JSON.parse(localStorage.getItem("db_clients")) || [];
+            let productCatalog = JSON.parse(localStorage.getItem("db_products")) || [
+                { desc: "Ordinary Portland Cement", spec: "Bestway (50 kg Bag)", unit: "Bag", price: 1250 },
+                { desc: "Deformed Steel Bar", spec: "60 Grade, 12mm Dia", unit: "Ton", price: 230000 },
+                { desc: "Margalla Crushed aggregate", spec: "3/4 Down premium", unit: "Cft", price: 125 }
+            ];
+
+            let logoBase64 = "", signBase64 = "", stampBase64 = "";
+
+            const itemsContainer = document.getElementById("form-items-container");
+            const btnAddItem = document.getElementById("btn-add-item");
+            const btnSaveProfile = document.getElementById("btn-save-profile");
+            const btnDownloadPDF = document.getElementById("btn-download-pdf");
+            const themeSelect = document.getElementById("input-theme");
+            const quoteBox = document.getElementById("quotation-print-area");
+
+            document.getElementById("input-date").valueAsDate = new Date();
+
+            // Auto increment quote number
+            let savedQuoteNum = parseInt(localStorage.getItem("quote_counter")) || 50;
+            savedQuoteNum++;
+            localStorage.setItem("quote_counter", savedQuoteNum);
+            const today = new Date();
+            const year = today.getFullYear();
+            const paddedNum = String(savedQuoteNum).padStart(3, "0");
+            const savedPrefix = localStorage.getItem("quote_prefix") || "QTN";
+document.getElementById("input-quote-no").value = `${savedPrefix}/${year}/${paddedNum}`;
+            updatePreview();
+
+            // ================= UPGRADE: DARK MODE INTERACTION LOGIC =================
+            const btnToggleDark = document.getElementById("btn-toggle-dark-mode");
+            const themeIcon = document.getElementById("theme-icon");
+            
+            // Check previous selection
+            if(localStorage.getItem("app-ui-theme") === "dark") {
+                document.body.setAttribute("data-theme", "dark");
+                themeIcon.innerText = "☀️";
+            }
+
+            btnToggleDark.addEventListener("click", () => {
+                if(document.body.getAttribute("data-theme") === "dark") {
+                    document.body.removeAttribute("data-theme");
+                    themeIcon.innerText = "🌙";
+                    localStorage.setItem("app-ui-theme", "light");
+                } else {
+                    document.body.setAttribute("data-theme", "dark");
+                    themeIcon.innerText = "☀️";
+                    localStorage.setItem("app-ui-theme", "dark");
+                }
+            });
+
+
+            // ================= DIGITAL SIGNATURE DRAW PAD ENGINE =================
+            const canvas = document.getElementById("signature-pad");
+            const ctx = canvas.getContext("2d");
+            let isDrawing = false;
+
+            function resizeCanvas() {
+                canvas.width = canvas.parentElement.clientWidth - 18;
+                canvas.height = 110;
+                ctx.lineWidth = 2;
+                ctx.lineCap = "round";
+                ctx.strokeStyle = "#000000";
+            }
+            window.addEventListener("resize", resizeCanvas);
+            resizeCanvas();
+
+            function getMousePos(canvasDom, touchOrMouseEvent) {
+                let rect = canvasDom.getBoundingClientRect();
+                let clientX = touchOrMouseEvent.touches ? touchOrMouseEvent.touches[0].clientX : touchOrMouseEvent.clientX;
+                let clientY = touchOrMouseEvent.touches ? touchOrMouseEvent.touches[0].clientY : touchOrMouseEvent.clientY;
+                return { x: clientX - rect.left, y: clientY - rect.top };
+            }
+
+            function startDrawing(e) {
+                isDrawing = true;
+                let pos = getMousePos(canvas, e);
+                ctx.beginPath();
+                ctx.moveTo(pos.x, pos.y);
+                e.preventDefault();
+            }
+
+            function draw(e) {
+                if (!isDrawing) return;
+                let pos = getMousePos(canvas, e);
+                ctx.lineTo(pos.x, pos.y);
+                ctx.stroke();
+                e.preventDefault();
+            }
+
+            function stopDrawing() { isDrawing = false; }
+
+            canvas.addEventListener("mousedown", startDrawing);
+            canvas.addEventListener("mousemove", draw);
+            canvas.addEventListener("mouseup", stopDrawing);
+            canvas.addEventListener("mouseleave", stopDrawing);
+
+            canvas.addEventListener("touchstart", startDrawing, {passive: false});
+            canvas.addEventListener("touchmove", draw, {passive: false});
+            canvas.addEventListener("touchend", stopDrawing);
+
+            document.getElementById("btn-clear-pad").addEventListener("click", () => {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                signBase64 = "";
+                updatePreview();
+            });
+
+            document.getElementById("btn-lock-pad").addEventListener("click", () => {
+                const blank = document.createElement('canvas');
+                blank.width = canvas.width; blank.height = canvas.height;
+                if(canvas.toDataURL() === blank.toDataURL()) {
+                    return alert("Pad is completely blank! Please draw a signature first.");
+                }
+                signBase64 = canvas.toDataURL();
+                updatePreview();
+                alert("🖊️ Hand-drawn signature successfully captured and stamped!");
+            });
+
+            // ================= JSON DATABASE EXPORT / IMPORT =================
+            document.getElementById("btn-export-db").addEventListener("click", () => {
+                const packageBackup = {
+                    firmProfile: localStorage.getItem("pro_firm_profile"),
+                    clients: localStorage.getItem("db_clients"),
+                    products: localStorage.getItem("db_products")
+                };
+                const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(packageBackup));
+                const dlAnchorElem = document.createElement('a');
+                dlAnchorElem.setAttribute("href", dataStr);
+                dlAnchorElem.setAttribute("download", `Quotation_System_Database_Backup.json`);
+                dlAnchorElem.click();
+            });
+
+            document.getElementById("btn-trigger-import").addEventListener("click", () => {
+                document.getElementById("input-import-db").click();
+            });
+
+            document.getElementById("input-import-db").addEventListener("change", function(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = function(evt) {
+                    try {
+                        const parsed = JSON.parse(evt.target.result);
+                        if(parsed.firmProfile) localStorage.setItem("pro_firm_profile", parsed.firmProfile);
+                        if(parsed.clients) localStorage.setItem("db_clients", parsed.clients);
+                        if(parsed.products) localStorage.setItem("db_products", parsed.products);
+                        
+                        alert("🎉 Database system package synchronized successfully! App will now refresh.");
+                        window.location.reload();
+                    } catch(err) {
+                        alert("Error: Core layout file configuration corrupted or structure mismatch!");
+                    }
+                };
+                reader.readAsText(file);
+            });
+
+
+            // ================= CUSTOMER STORAGE CORE =================
+            const btnSaveClient = document.getElementById("btn-save-current-client");
+            const selectClientDropdown = document.getElementById("select-saved-client");
+
+            function renderClientDropdown() {
+                selectClientDropdown.innerHTML = `<option value="">-- Manual Entry / Memory Database Select --</option>`;
+                clientDatabase.forEach((client, index) => {
+                    selectClientDropdown.insertAdjacentHTML("beforeend", `<option value="${index}">${client.name}</option>`);
+                });
+            }
+
+            btnSaveClient.addEventListener("click", () => {
+                const name = document.getElementById("input-client-name").value.trim();
+                const address = document.getElementById("input-client-address").value.trim();
+                if(!name) return alert("Client Company Name is mandatory for database compilation!");
+                if(clientDatabase.some(c => c.name.toLowerCase() === name.toLowerCase())) {
+                    return alert("Client with this identical profile already exists in system memory logs.");
+                }
+                clientDatabase.push({ name, address });
+                localStorage.setItem("db_clients", JSON.stringify(clientDatabase));
+                alert("👤 Client profile records compiled and locked inside browser memory successfully!");
+                renderClientDropdown();
+            });
+
+            selectClientDropdown.addEventListener("change", function() {
+                if(this.value !== "") {
+                    const client = clientDatabase[this.value];
+                    document.getElementById("input-client-name").value = client.name;
+                    document.getElementById("input-client-address").value = client.address;
+                    updatePreview();
+                }
+            });
+
+            // ================= WAREHOUSE PRODUCT CATALOG PRESETS =================
+            const btnAddToCatalog = document.getElementById("btn-add-to-catalog");
+            btnAddToCatalog.addEventListener("click", () => {
+                const desc = document.getElementById("cat-desc").value.trim();
+                const spec = document.getElementById("cat-spec").value.trim();
+                const unit = document.getElementById("cat-unit").value.trim();
+                const price = parseFloat(document.getElementById("cat-price").value) || 0;
+
+                if(!desc) return alert("Product item description required!");
+                productCatalog.push({ desc, spec, unit, price });
+                localStorage.setItem("db_products", JSON.stringify(productCatalog));
+                alert("📦 Product inventory profile successfully registered into central catalog list!");
+                
+                document.getElementById("cat-desc").value = "";
+                document.getElementById("cat-spec").value = "";
+                document.getElementById("cat-unit").value = "";
+                document.getElementById("cat-price").value = "";
+                renderFormItems();
+            });
+
+            // ================= FORM ROW RENDERING AND LIVE AUTO-COMPLETE MAPPING =================
+            function renderFormItems() {
+                itemsContainer.innerHTML = "";
+                items.forEach((item, index) => {
+                    itemsContainer.insertAdjacentHTML("beforeend", `
+                        <div class="item-row-form" data-index="${index}">
+                            <button type="button" class="btn-delete-row" data-index="${index}">Remove</button>
+                            
+                            <div class="form-group" style="margin-bottom: 8px;">
+                                <label style="color:#3b82f6; font-weight:700;">🔎 Live Catalog Smart Search</label>
+                                <input type="text" class="item-search-input" placeholder="Type letters to filter inventory items...">
+                                <div class="search-results-box"></div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Item Title Description</label>
+                                <input type="text" class="item-desc" value="${item.desc}">
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group"><label>Specification / Dimension</label><input type="text" class="item-spec" value="${item.spec}"></div>
+                                <div class="form-group" style="flex:0.5;"><label>Unit</label><input type="text" class="item-unit" value="${item.unit}"></div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group"><label>Quantity</label><input type="number" class="item-qty" value="${item.qty}"></div>
+                                <div class="form-group"><label>Unit Selling Rate</label><input type="number" class="item-price" value="${item.price}"></div>
+                            </div>
+                        </div>
+                    `);
+                });
+
+                document.querySelectorAll(".item-search-input").forEach((searchInp) => {
+                    const row = searchInp.closest(".item-row-form");
+                    const resBox = row.querySelector(".search-results-box");
+
+                    searchInp.addEventListener("focus", function() {
+                        showFilteredResults(this.value, resBox, row);
+                    });
+
+                    searchInp.addEventListener("input", function() {
+                        showFilteredResults(this.value, resBox, row);
+                    });
+
+                    searchInp.addEventListener("blur", function() {
+                        setTimeout(() => { resBox.style.display = "none"; }, 250);
+                    });
+                });
+
+                updatePreview();
+            }
+
+            function showFilteredResults(query, container, row) {
+                container.innerHTML = "";
+                const matched = productCatalog.filter(p => p.desc.toLowerCase().includes(query.toLowerCase()));
+                
+                if(matched.length === 0) {
+                    container.insertAdjacentHTML("beforeend", `<div class="search-item-option" style="color:#9ca3af; cursor:default;">No matches found</div>`);
+                } else {
+                    matched.forEach(match => {
+                        const originalIdx = productCatalog.findIndex(p => p.desc === match.desc && p.spec === match.spec);
+                        container.insertAdjacentHTML("beforeend", `
+                            <div class="search-item-option" data-catalog-id="${originalIdx}">
+                                <strong>${match.desc}</strong> <span style="color:#6b7280;">(${match.spec || 'No spec'})</span> - Price: ${match.price}
+                            </div>
+                        `);
+                    });
+                }
+                
+                container.style.display = "block";
+                
+                container.querySelectorAll(".search-item-option").forEach(opt => {
+                    opt.addEventListener("click", function() {
+                        const idx = this.getAttribute("data-catalog-id");
+                        if(idx !== null) {
+                            const preset = productCatalog[idx];
+                            row.querySelector(".item-desc").value = preset.desc;
+                            row.querySelector(".item-spec").value = preset.spec || "";
+                            row.querySelector(".item-unit").value = preset.unit || "";
+                            row.querySelector(".item-price").value = preset.price || 0;
+                            row.querySelector(".item-search-input").value = preset.desc;
+                            updatePreview();
+                        }
+                    });
+                });
+            }
+
+            // ================= SYSTEM ARCHITECTURE REDIRECTS =================
+            themeSelect.addEventListener("change", () => quoteBox.className = "quotation-box " + themeSelect.value);
+            
+            // ================= CRITICAL UPGRADE: MULTI-PAGE PAGE-BREAK CONFIG FOR HTML2PDF =================
+            btnDownloadPDF.addEventListener("click", () => {
+                const quoteNo = document.getElementById("input-quote-no").value || "Quotation";
+                html2pdf().set({
+                    margin: [0.4, 0.4, 0.4, 0.4], // 10mm soft safe printable boundaries
+                    filename: `Quotation_Document_${quoteNo}.pdf`,
+                    image: { type: 'jpeg', quality: 0.99 },
+                    html2canvas: { scale: 2.2, useCORS: true, letterRendering: true },
+                    jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' },
+                    pagebreak: { mode: ['avoid-all', 'css'] } // Tells engine to never cut tables mid-row
+                }).from(quoteBox).save();
+            });
+
+            function numberToWords(amount) {
+                const words = {
+                    0: 'Zero', 1: 'One', 2: 'Two', 3: 'Three', 4: 'Four', 5: 'Five', 6: 'Six', 7: 'Seven', 8: 'Eight', 9: 'Nine',
+                    10: 'Ten', 11: 'Eleven', 12: 'Twelve', 13: 'Thirteen', 14: 'Fourteen', 15: 'Fifteen', 16: 'Sixteen', 17: 'Seventeen', 18: 'Eighteen', 19: 'Nineteen',
+                    20: 'Twenty', 30: 'Thirty', 40: 'Forty', 50: 'Fifty', 60: 'Sixty', 70: 'Seventy', 80: 'Eighty', 90: 'Ninety'
+                };
+                let num = Math.floor(amount); if (num === 0) return "Zero Only.";
+                function convertLessThanOneThousand(n) {
+                    let str = "";
+                    if (n >= 100) { str += words[Math.floor(n / 100)] + " Hundred "; n %= 100; }
+                    if (n > 0) {
+                        if (str !== "") str += "and ";
+                        if (n < 20) { str += words[n] + " "; } 
+                        else { str += words[Math.floor(n / 10) * 10] + " "; if (n % 10 > 0) str += words[n % 10] + " "; }
+                    }
+                    return str;
+                }
+                let result = "";
+                let units = [{ label: "Billion", value: 1000000000 }, { label: "Million", value: 1000000 }, { label: "Thousand", value: 1000 }];
+                for (let i = 0; i < units.length; i++) { if (num >= units[i].value) { result += convertLessThanOneThousand(Math.floor(num / units[i].value)) + units[i].label + " "; num %= units[i].value; } }
+                if (num > 0) result += convertLessThanOneThousand(num);
+                return result.trim() + " Only.";
+            }
+
+            function handleImageUpload(inputEl, callback) {
+                inputEl.addEventListener("change", function(e) {
+                    const file = e.target.files[0];
+                    if (file) { const reader = new FileReader(); reader.onload = (event) => callback(event.target.result); reader.readAsDataURL(file); }
+                });
+            }
+            handleImageUpload(document.getElementById("input-my-logo"), (base64) => { logoBase64 = base64; updatePreview(); });
+            handleImageUpload(document.getElementById("input-my-sign"), (base64) => { signBase64 = base64; updatePreview(); });
+            handleImageUpload(document.getElementById("input-my-stamp"), (base64) => { stampBase64 = base64; updatePreview(); });
+
+            function loadSavedProfile() {
+                if (localStorage.getItem("pro_firm_profile")) {
+                    const profile = JSON.parse(localStorage.getItem("pro_firm_profile"));
+                    document.getElementById("input-my-company").value = profile.company;
+                    document.getElementById("input-my-tagline").value = profile.tagline;
+                    document.getElementById("input-my-address").value = profile.address;
+                    document.getElementById("input-my-phone").value = profile.phone;
+                    document.getElementById("input-my-email").value = profile.email;
+                    document.getElementById("input-my-ntn").value = profile.ntn;
+                    document.getElementById("input-my-strn").value = profile.strn;
+                    document.getElementById("input-my-footer-addr").value = profile.footerAddr;
+                    logoBase64 = profile.logo || ""; if(!signBase64) signBase64 = profile.sign || ""; stampBase64 = profile.stamp || "";
+                }
+            }
+
+            btnSaveProfile.addEventListener("click", () => {
+                const prefixVal = document.getElementById("input-my-ntn").value.split("-")[0].trim() || "QTN";
+                localStorage.setItem("quote_prefix", document.getElementById("input-quote-prefix").value || "QTN");
+                const profileData = {
+                    company: document.getElementById("input-my-company").value, tagline: document.getElementById("input-my-tagline").value,
+                    address: document.getElementById("input-my-address").value, phone: document.getElementById("input-my-phone").value,
+                    email: document.getElementById("input-my-email").value, ntn: document.getElementById("input-my-ntn").value,
+                    strn: document.getElementById("input-my-strn").value, footerAddr: document.getElementById("input-my-footer-addr").value,
+                    logo: logoBase64, sign: signBase64, stamp: stampBase64
+                };
+                localStorage.setItem("pro_firm_profile", JSON.stringify(profileData));
+                alert("💾 Corporate structural core profile synchronized inside storage engines!"); updatePreview();
+            });
+
+            // ================= REAL-TIME BILLING PREVIEW LAYER SYSTEM =================
+            function updatePreview() {
+                const compName = document.getElementById("input-my-company").value;
+                document.getElementById("view-my-company").innerText = compName;
+                document.getElementById("view-sign-company-name").innerText = "For " + compName;
+                document.getElementById("view-my-tagline").innerText = document.getElementById("input-my-tagline").value;
+                document.getElementById("view-my-address").innerText = document.getElementById("input-my-address").value;
+                document.getElementById("view-my-phone").innerText = document.getElementById("input-my-phone").value;
+                document.getElementById("view-my-email").innerText = document.getElementById("input-my-email").value;
+                document.getElementById("view-my-ntn").innerText = document.getElementById("input-my-ntn").value;
+                document.getElementById("view-my-strn").innerText = document.getElementById("input-my-strn").value;
+                document.getElementById("view-my-footer-addr").innerText = document.getElementById("input-my-footer-addr").value;
+
+                // UPGRADE: WATERMARK VALUE MAPPING
+                document.getElementById("view-watermark").innerText = document.getElementById("input-watermark").value;
+
+                document.getElementById("view-logo-container").innerHTML = logoBase64 ? `<img src="${logoBase64}" class="preview-logo">` : "";
+                document.getElementById("view-sign-container").innerHTML = signBase64 ? `<img src="${signBase64}" class="preview-sign">` : "";
+                document.getElementById("view-stamp-container").innerHTML = stampBase64 ? `<img src="${stampBase64}" class="preview-stamp">` : "";
+
+                document.getElementById("view-quote-no").innerText = document.getElementById("input-quote-no").value;
+                document.getElementById("view-client-name").innerText = document.getElementById("input-client-name").value;
+                document.getElementById("view-client-address").innerText = document.getElementById("input-client-address").value.replace(/\n/g, "<br>");
+                document.getElementById("view-date").innerText = document.getElementById("input-date").value;
+                document.getElementById("view-subject").innerText = document.getElementById("input-subject").value;
+                
+                const currency = document.getElementById("input-currency").value;
+                document.querySelectorAll(".curr-sym").forEach(el => el.innerText = currency);
+
+                const tbody = document.getElementById("view-table-body"); tbody.innerHTML = "";
+                let subTotal = 0;
+                
+                const formRows = document.querySelectorAll(".item-row-form");
+                formRows.forEach((row, index) => {
+                    const desc = row.querySelector(".item-desc").value;
+                    const spec = row.querySelector(".item-spec").value;
+                    const unit = row.querySelector(".item-unit").value;
+                    const qty = parseFloat(row.querySelector(".item-qty").value) || 0;
+                    const price = parseFloat(row.querySelector(".item-price").value) || 0;
+                    const total = qty * price; subTotal += total;
+                    items[index] = { desc, spec, unit, qty, price };
+
+                    tbody.insertAdjacentHTML("beforeend", `
+                        <tr>
+                            <td style="text-align:center; color:#6b7280;">${index + 1}</td>
+                            <td><strong style="color:#111827;">${desc}</strong></td>
+                            <td style="color:#4b5563;">${spec}</td>
+                            <td style="text-align:center; color:#4b5563;">${unit}</td>
+                            <td style="text-align:center; font-weight:600;">${qty}</td>
+                            <td style="text-align:right; color:#4b5563;">${price.toLocaleString(undefined, {minimumFractionDigits: 2})}</td>
+                            <td style="text-align:right; font-weight:700; color:#111827;">${total.toLocaleString(undefined, {minimumFractionDigits: 2})}</td>
+                        </tr>
+                    `);
+                });
+
+                const taxName = document.getElementById("input-tax-name").value;
+                const taxPercent = parseFloat(document.getElementById("input-tax-percent").value) || 0;
+                const taxAmount = subTotal * (taxPercent / 100);
+                const grandTotal = subTotal + taxAmount;
+
+                document.getElementById("view-sub-total").innerText = subTotal.toLocaleString(undefined, {minimumFractionDigits: 2});
+                document.getElementById("view-tax-label").innerText = taxName;
+                document.getElementById("view-tax-rate").innerText = taxPercent;
+                document.getElementById("view-tax-amount").innerText = taxAmount.toLocaleString(undefined, {minimumFractionDigits: 2});
+                document.getElementById("view-grand-total").innerText = grandTotal.toLocaleString(undefined, {minimumFractionDigits: 2});
+                document.getElementById("view-amount-words").innerText = numberToWords(grandTotal);
+
+                const termsText = document.getElementById("input-terms").value;
+                const termsList = document.getElementById("view-terms-list");
+                termsList.innerHTML = "";
+                termsText.split("\n").forEach(term => { if(term.trim() !== "") termsList.insertAdjacentHTML("beforeend", `<li>${term}</li>`); });
+            }
+
+            btnAddItem.addEventListener("click", () => { items.push({ desc: "", spec: "", unit: "", qty: 1, price: 0 }); renderFormItems(); });
+            itemsContainer.addEventListener("click", (e) => { if (e.target.classList.contains("btn-delete-row")) { items.splice(e.target.getAttribute("data-index"), 1); renderFormItems(); } });
+            
+            // Listeners for inputs
+            document.body.addEventListener("input", updatePreview);
+            document.getElementById("input-currency").addEventListener("change", updatePreview);
+            document.getElementById("input-watermark").addEventListener("input", updatePreview);
+
+            // Execute core boots
+            loadSavedProfile();
+            renderClientDropdown();
+            renderFormItems();
+        });
+    </script>
+</body>
+</html>
